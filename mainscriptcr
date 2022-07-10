@@ -1,0 +1,203 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Chicago Remastered", "Synapse")
+
+local difference = false
+local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+local camera = game.Workspace.CurrentCamera
+local aimbotEnabled = false
+local target = nil
+local uis = game:GetService("UserInputService")
+local mouse = game.Players.LocalPlayer:GetMouse()
+local toggleAimbot = false
+
+local HomeTab = Window:NewTab("Home")
+local MainTab = Window:NewTab("Main")
+local AimHacksTab = Window:NewTab("Aimhacks")
+local ESPTab = Window:NewTab("ESP")
+local TeleportsTab = Window:NewTab("Teleports")
+local AutoFarmTab = Window:NewTab("Autofarm")
+local aimbotKey = "Q"
+
+local InformationSection = HomeTab:NewSection("Information")
+InformationSection:NewLabel("To use this scripts simply just press the buttons.")
+InformationSection:NewLabel("If you have any questions just dm me \n on discord: discord.gg/ZUYBPWJjcF")
+
+local CreditsSection = HomeTab:NewSection("Credits")
+CreditsSection:NewLabel("Join my discord here: discord.gg/ZUYBPWJjcF")
+
+local HitboxSection = MainTab:NewSection("Hitbox")
+
+local FullbrightSection = MainTab:NewSection("Fullbright")
+
+FullbrightSection:NewButton("Fullbright", "This makes the game brigther and \n makes it easier to see stuff!", function()
+    local Light = game:GetService("Lighting")
+
+    function dofullbright()
+        Light.Ambient = Color3.new(1, 1, 1)
+        Light.ColorShift_Bottom = Color3.new(1, 1, 1)
+        Light.ColorShift_Top = Color3.new(1, 1, 1)
+    end
+
+    dofullbright()
+
+Light.LightingChanged:Connect(dofullbright) 
+end)
+
+HitboxSection:NewButton("Hitbox Extender", "If you enable this it will become easier \n to use aimbot!", function()
+    while wait(1) do
+
+    for i, v in pairs(game.Players:GetChildren()) do
+            if v.Name == game.Players.LocalPlayer.Name then
+                    print("no can do sir")
+                else
+                    local character = v.Character or v.CharacterAdded:Wait()
+                    character:WaitForChild("HumanoidRootPart").Size = Vector3.new(7.5,7.5,7.5)
+                    character.HumanoidRootPart.Transparency = 0.75
+            end
+
+        end
+    end
+
+end)
+
+local AimbotSection = AimHacksTab:NewSection("Aimbot")
+
+AimbotSection:NewButton("Aimbot", "Enables aimbot! I recommend being in first person \n since it's much easier to aim.", function()
+    print("clicked")
+    if toggleAimbot == false then
+        toggleAimbot = true
+    mouse.Button2Down:Connect(function()
+        print("left mouse button")
+        if mouse.Target.Parent:FindFirstChild("Humanoid") and target == nil then
+            print("Found humanoid!")
+            aimbotEnabled = true
+            target = mouse.Target.Parent
+            game:GetService("RunService").RenderStepped:Connect(function()
+                if aimbotEnabled == true then
+                    camera.CFrame = CFrame.new(camera.CFrame.Position, target.Head.Position)
+                end
+            end)          
+        end
+
+    end)
+
+    mouse.Button2Up:Connect(function()
+        aimbotEnabled = false
+        target = nil
+    end)
+else
+    toggleAimbot = false
+    aimbotEnabled = false
+        target = nil
+    end
+end)
+
+
+
+
+local ESPsection = ESPTab:NewSection("ESP")
+
+ESPsection:NewButton("ESP", "Enables ESP, duh?", function()
+
+    local esp_settings = {
+        textsize = 18,
+        color = 255,255,255
+    }
+    
+    local gui = Instance.new("BillboardGui")
+    local esp = Instance.new("TextLabel",gui)
+    
+    
+    
+    gui.Name = "esp"
+    gui.ResetOnSpawn = false
+    gui.AlwaysOnTop = true
+    gui.LightInfluence = 0
+    gui.Size = UDim2.new(1.75, 0, 1.75, 0)
+    esp.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    esp.Text = ""
+    esp.Size = UDim2.new(0.0001, 0.00001, 0.0001, 0.00001)
+    esp.BorderSizePixel = 4
+    esp.BorderColor3 = Color3.new(esp_settings.colour)
+    esp.BorderSizePixel = 0
+    esp.Font = "GothamBold"
+    esp.TextSize = esp_settings.textsize
+    esp.TextColor3 = Color3.new(esp_settings.color)
+    
+    while wait(1) do
+    for i, v in pairs(game.Players:GetChildren()) do
+        local character = v.Character or v.CharacterAdded:Wait()
+        local guiclone = gui:Clone()
+        if character:FindFirstChild(guiclone.Name) then
+            character:FindFirstChild(guiclone.Name):Destroy()
+            guiclone.Parent = character
+            esp.Text = v.Name
+            guiclone.Adornee = character:WaitForChild("Head")
+        else
+            guiclone.Parent = character
+            esp.Text = v.Name
+            guiclone.Adornee = character:WaitForChild("Head")
+        end
+    end
+end
+end)
+
+
+local teleportSection = TeleportsTab:NewSection("Teleports")
+
+teleportSection:NewButton("Bank", "Teleports you to the bank.", function()
+    hrp.CFrame = CFrame.new(-243, 5, 93)
+end)
+
+teleportSection:NewButton("Sewer", "Teleports you to the sewer were you \n can get explosives etc.", function()
+    hrp.CFrame = CFrame.new(-0.66, -9.3, -23.1)
+end)
+
+teleportSection:NewButton("House Areas 1", "Teleports you to the houses. (1)", function()
+    hrp.CFrame = CFrame.new(-137, 3, -69)
+end)
+
+teleportSection:NewButton("House Areas 2", "Teleports you to the houses. (2)", function()
+    hrp.CFrame = CFrame.new(-136, 3, 76.6)
+end)
+
+teleportSection:NewButton("Chicago Cuts", "Teleports you to chicago cuts.", function()
+    hrp.CFrame = CFrame.new(-56.8, 3.2, -17)
+end)
+
+teleportSection:NewButton("Motel", "Teleports you to the motel.", function()
+    hrp.CFrame = CFrame.new(9.34, 3.2, -21.6)
+end)
+
+teleportSection:NewButton("Gun Store", "Teleports you to the Gun Store.", function()
+    hrp.CFrame = CFrame.new(95, 3.2, 60.5)
+end)
+
+teleportSection:NewButton("Tank Station", "Teleports you to the Tank Station.", function()
+    hrp.CFrame = CFrame.new(320, 3.7, -51)
+end)
+
+teleportSection:NewButton("Blox n out", "Teleports you to blox n out.", function()
+    hrp.CFrame = CFrame.new(587, 3.6, -59.6)
+end)
+
+teleportSection:NewButton("Blox Motorsports", "Teleports you to Blox Motorsports.", function()
+    hrp.CFrame = CFrame.new(742, 3.2, -174)
+end)
+
+teleportSection:NewButton("IceBlox/Jewerly Store", "Teleports you to the Jewerly Store/IceBlox.", function()
+    hrp.CFrame = CFrame.new(601,3.1,-170.2)
+end)
+
+teleportSection:NewButton("Chicago Hospital", "Teleports you to Chicago Hospital.", function()
+    hrp.CFrame = CFrame.new(416, 3.2, -333)
+end)
+
+teleportSection:NewButton("Larger Houses 1", "Teleports you to the Larger Houses (1).", function()
+    hrp.CFrame = CFrame.new(57,3.2,-230)
+end)
+
+teleportSection:NewButton("Larger Houses 2", "Teleports you to the Larger Houses (2).", function()
+    hrp.CFrame = CFrame.new(112,3.2,-228)
+end)
